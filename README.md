@@ -1,1 +1,1 @@
-# algorithmd
+# algorithmD

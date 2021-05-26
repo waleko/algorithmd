@@ -1,3 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
+
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+@import "assets/Navigation-with-Button.css";
+@import "assets/Navigation-Clean.css";
+
+body {background: #f4f4f4}
