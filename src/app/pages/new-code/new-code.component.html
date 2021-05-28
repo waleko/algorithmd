@@ -1,0 +1,40 @@
+<div class="container" style="margin-top: 3em;">
+  <div class="row">
+    <div class="col">
+      <div>
+        <form>
+          <div class="form-group"><label style="font-size: 32px;">Title</label><input class="form-control" type="text" required="" maxlength="100"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" id="tags-col"></div>
+  </div>
+  <div class="row" style="background: var(--light);border-radius: 25px;padding: 15px;">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <div class="col col-4"><input type="text" class="col-10" placeholder="Filename including extension..." style="font-family: monospace;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" id="codemirror-col">
+          <ngx-codemirror
+            [options]="{
+        lineNumbers: true,
+        theme: 'material',
+        mode: 'text/x-c++src'
+        }"
+          ></ngx-codemirror>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-right" style="margin-top: 10px;"><button class="btn btn-primary btn-lg border rounded-pill" type="button">Publish</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
