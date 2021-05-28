@@ -1,3 +1,11 @@
+@import 'themes';
+
+@import '~@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+};
+
 /* You can add global styles to this file, and also import other style files */
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
@@ -8,5 +16,18 @@
 
 @import "assets/css/Navigation-with-Button.css";
 @import "assets/css/Navigation-Clean.css";
+@import "assets/css/Footer-Basic.css";
+
+@import "https://fonts.googleapis.com/css?family=JetBrains+Mono";
+@import "https://fonts.googleapis.com/css?family=Montserrat";
+@import "assets/fonts/fontawesome-all.min.css";
+@import "assets/fonts/ionicons.min.css";
+@import "assets/css/styles.css";
 
 body {background: #f4f4f4}
+
+.footer-basic a {
+    color: #4b4c4d !important;
+    text-decoration: none;
+    opacity: 0.8;
+}

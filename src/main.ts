@@ -11,7 +11,7 @@ import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/clike/clike';
 
 Sentry.init({
-  dsn: "https://f2d07e2bbf444e8ea350ee09a014026d@o329638.ingest.sentry.io/5790170",
+  dsn: environment.sentryDSNUrl,
   integrations: [
     new Integrations.BrowserTracing({
       tracingOrigins: ["localhost", "https://algorithmd.wlko.me"],
