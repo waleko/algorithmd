@@ -15,6 +15,7 @@ import {AngularFireModule} from "@angular/fire";
 import {environment} from "../environments/environment";
 import {AngularFireDatabaseModule} from "@angular/fire/database";
 import {AngularFireAuthModule} from "@angular/fire/auth";
+import {AuthModule} from "@auth0/auth0-angular";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,11 @@ import {AngularFireAuthModule} from "@angular/fire/auth";
     AngularFireModule.initializeApp(environment.firebaseConf),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+
+    AuthModule.forRoot({
+        domain: 'algorithmd.eu.auth0.com',
+        clientId: 'X3riHlRCmbZU1HV2splhBswCZvI6p2oN'
+    }),
   ],
   providers: [
     {
