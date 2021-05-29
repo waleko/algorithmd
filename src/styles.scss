@@ -23,3 +23,19 @@ body {background: #f4f4f4}
     text-decoration: none;
     opacity: 0.8;
 }
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 250px;
+}
+.my-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 190px;
+}
