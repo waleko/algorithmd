@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import * as Sentry from "@sentry/angular";
 
@@ -16,6 +16,8 @@ import {environment} from "../environments/environment";
 import {AngularFireDatabaseModule} from "@angular/fire/database";
 import {AngularFireAuthModule} from "@angular/fire/auth";
 import {AuthModule} from "@auth0/auth0-angular";
+import {TagInputModule} from "ngx-chips";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {AuthModule} from "@auth0/auth0-angular";
   ],
   imports: [
     BrowserModule,
+    TagInputModule,
     FormsModule,
+    ReactiveFormsModule,
     CodemirrorModule,
     NgbModule,
     AppRoutingModule,
@@ -35,9 +39,12 @@ import {AuthModule} from "@auth0/auth0-angular";
     AngularFireAuthModule,
 
     AuthModule.forRoot({
-        domain: 'algorithmd.eu.auth0.com',
-        clientId: 'X3riHlRCmbZU1HV2splhBswCZvI6p2oN'
+      domain: 'algorithmd.eu.auth0.com',
+      clientId: 'X3riHlRCmbZU1HV2splhBswCZvI6p2oN',
+      useRefreshTokens: true
     }),
+
+    BrowserAnimationsModule
   ],
   providers: [
     {

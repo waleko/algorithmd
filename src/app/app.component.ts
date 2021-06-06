@@ -10,6 +10,8 @@ import {User} from "@auth0/auth0-spa-js";
 export class AppComponent implements OnInit {
   title = 'algorithmd';
 
+  year = new Date().getFullYear()
+
   // Flag if user observable has been loaded
   isDataLoaded: boolean  // TODO: do this cleaner
 
