@@ -18,6 +18,7 @@ import {AngularFireAuthModule} from "@angular/fire/auth";
 import {AuthModule} from "@auth0/auth0-angular";
 import {TagInputModule} from "ngx-chips";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AngularFireAnalyticsModule} from "@angular/fire/analytics";
 
 @NgModule({
   declarations: [
@@ -37,11 +38,13 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     AngularFireModule.initializeApp(environment.firebaseConf),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFireAnalyticsModule,
 
     AuthModule.forRoot({
       domain: 'algorithmd.eu.auth0.com',
       clientId: 'X3riHlRCmbZU1HV2splhBswCZvI6p2oN',
-      useRefreshTokens: true
+      useRefreshTokens: true,
+      cacheLocation: "localstorage"
     }),
 
     BrowserAnimationsModule
