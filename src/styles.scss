@@ -2,7 +2,6 @@
 @import '~codemirror/lib/codemirror';
 @import '~codemirror/theme/material';
 
-
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
@@ -16,22 +15,26 @@
 @import "assets/fonts/ionicons.min.css";
 @import "assets/css/styles.css";
 
-body {background: #f4f4f4}
+body {
+  background: #f4f4f4
+}
 
 .footer-basic a {
-    color: #4b4c4d !important;
-    text-decoration: none;
-    opacity: 0.8;
+  color: #4b4c4d !important;
+  text-decoration: none;
+  opacity: 0.8;
 }
 
 html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 250px;
 }
+
 .my-footer {
   position: absolute;
   bottom: 0;

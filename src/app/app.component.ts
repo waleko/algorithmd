@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "@auth0/auth0-angular";
-import {Observable} from "rxjs";
-import {User} from "@auth0/auth0-spa-js";
+import {FirebaseService} from "./firebase.service";
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -15,11 +15,18 @@ export class AppComponent implements OnInit {
   // Flag if user observable has been loaded
   isDataLoaded: boolean  // TODO: do this cleaner
 
-  constructor(public auth: AuthService) {
+  constructor(public auth: AuthService, private fs: FirebaseService) {
     this.isDataLoaded = false
 
-    auth.user$.subscribe(user => {
+    // signal that the page has loaded
+    auth.user$.toPromise().then(_ => {
       this.isDataLoaded = true
+    })
+
+    // sign in into firebase
+    auth.user$.pipe(take(1)).subscribe(user => {
+      if (user != null)
+        fs.signInViaAuth0()
     })
   }
 
