@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     this.isDataLoaded = false
 
     // signal that the page has loaded
-    auth.user$.toPromise().then(_ => {
+    auth.user$.subscribe(_ => {
       this.isDataLoaded = true
     })
 

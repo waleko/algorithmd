@@ -3,10 +3,12 @@
     <div class="col">
       <div *ngFor="let item of items | async" class="card" style="border-radius: 10px;margin-bottom: 10px;">
         <div class="card-body" style="border-radius: 0px;">
-          <h4 class="card-title"><a class="text-body" routerLink="/view/{{item.uid}}"
-                                    style="font-size: 24px;">{{item.title}}</a></h4>
+          <h4 class="card-title"><a class="text-body" routerLink="/view/{{item[0].uid}}"
+                                    style="font-size: 24px;">{{item[0].title}}</a></h4>
+          <tag-input [(ngModel)]="item[1]" [maxItems]="0" [ngModelOptions]="{standalone: true}"
+                     id="codeTags" theme='bootstrap'></tag-input>
           <p class="card-text"
-             style="font-family: 'JetBrains Mono', monospace;font-size: 13px;color: var(--gray);">{{item.preview_content}}</p>
+             style="font-family: 'JetBrains Mono', monospace;font-size: 13px;color: var(--gray);">{{item[0].preview_content}}</p>
         </div>
       </div>
     </div>
