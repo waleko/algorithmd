@@ -5,7 +5,8 @@ import {NewCodeRecord} from "../../code-record";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Router} from "@angular/router";
-import {AngularFireDatabase} from "@angular/fire/database";
+import {AuthService} from "@auth0/auth0-angular";
+import {take} from "rxjs/operators";
 
 
 @Component({
@@ -29,7 +30,7 @@ export class NewCodeComponent implements OnInit {
   codeEditorContent = ''
   submitted: boolean = false
 
-  constructor(private http: HttpClient, private router: Router, private db: AngularFireDatabase) {
+  constructor(private http: HttpClient, private router: Router, private auth: AuthService) {
   }
 
   ngOnInit(): void {
@@ -38,10 +39,10 @@ export class NewCodeComponent implements OnInit {
 
   filenameChanged() {
     // acquire filename
-    let filename = this.filenameControl.value // TODO: do this automatically via `FormControl.registerOnChange
+    const filename = this.filenameControl.value; // TODO: do this automatically via `FormControl.registerOnChange
 
     // get MIME type for the filename
-    let mime = getMimeByFilename(filename)
+    const mime = getMimeByFilename(filename);
     let res: string
     if (!mime)
       res = ""
@@ -56,18 +57,32 @@ export class NewCodeComponent implements OnInit {
     this.submitted = true
 
     if (this.titleControl.invalid || this.filenameControl.invalid || this.codeEditorContent.length == 0)
-      return;
+      return
 
-    let title = this.titleControl.value
-    let filename = this.filenameControl.value
+    // check if user is authenticated
+    let isAuthenticated: boolean = await this.auth.isAuthenticated$.pipe(take(1)).toPromise()
 
-    let newCodeRecord: NewCodeRecord = {
+    // if not authenticated, prompt to sign in
+    if (!isAuthenticated) {
+      // popup login
+      await this.auth.loginWithPopup().toPromise()
+      // update user's auth status
+      isAuthenticated = await this.auth.isAuthenticated$.pipe(take(1)).toPromise()
+      // if user refused to sign in, stop
+      if (!isAuthenticated)
+        return
+    }
+
+    const title = this.titleControl.value;
+    const filename = this.filenameControl.value;
+
+    const newCodeRecord: NewCodeRecord = {
       title: title,
       filename: filename,
       tagItems: this.tagItems.map(e => e.value),
       language: this.codeEditorLanguage,
       full_content: this.codeEditorContent
-    }
+    };
 
     const {uid} = await this.http.post<{ uid: string }>(`${environment.apiUrl}/v1/upload`, newCodeRecord, {}).toPromise()
 

@@ -5,14 +5,14 @@
         class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navcol-1">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item"><a class="nav-link active" routerLink="#">First Item</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="#">Second Item</a></li>
-          <li class="nav-item dropdown"><a aria-expanded="false" class="dropdown-toggle nav-link"
-                                           data-toggle="dropdown" href="#">Dropdown </a>
-            <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item"
-                                                                                          href="#">Second
-              Item</a><a class="dropdown-item" href="#">Third Item</a></div>
-          </li>
+          <li class="nav-item" *ngIf="auth.user$ | async"><a class="nav-link" routerLink="/my" href="#">My saves</a></li>
+<!--          <li class="nav-item"><a class="nav-link" routerLink="#">Second Item</a></li>-->
+<!--          <li class="nav-item dropdown"><a aria-expanded="false" class="dropdown-toggle nav-link"-->
+<!--                                           data-toggle="dropdown" href="#">Dropdown </a>-->
+<!--            <div class="dropdown-menu"><a class="dropdown-item" href="#">First Item</a><a class="dropdown-item"-->
+<!--                                                                                          href="#">Second-->
+<!--              Item</a><a class="dropdown-item" href="#">Third Item</a></div>-->
+<!--          </li>-->
         </ul>
         <span class="navbar-text actions">
         <div *ngIf="auth.user$ | async; then loggedIn else loggedOut"></div>

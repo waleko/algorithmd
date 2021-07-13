@@ -7,8 +7,9 @@
                                     style="font-size: 24px;">{{item[0].title}}</a></h4>
           <tag-input [(ngModel)]="item[1]" [maxItems]="0" [ngModelOptions]="{standalone: true}"
                      id="codeTags" theme='bootstrap'></tag-input>
-          <p class="card-text"
-             style="font-family: 'JetBrains Mono', monospace;font-size: 13px;color: var(--gray);">{{item[0].preview_content}}</p>
+          <div *ngFor="let line of item[0].preview_content.split('\n')">
+            <p class="card-text" style="font-family: 'JetBrains Mono', monospace;font-size: 13px;color: var(--gray);">{{line}}</p>
+          </div>
         </div>
       </div>
     </div>
