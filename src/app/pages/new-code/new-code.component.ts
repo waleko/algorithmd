@@ -69,7 +69,7 @@ export class NewCodeComponent implements OnInit {
       full_content: this.codeEditorContent
     }
 
-    const {uid} = await this.http.post<{ uid: string }>(`${environment.apiUrl}/v1/new_code`, newCodeRecord, {}).toPromise()
+    const {uid} = await this.http.post<{ uid: string }>(`${environment.apiUrl}/v1/upload`, newCodeRecord, {}).toPromise()
 
     await this.router.navigate(["view", uid])
   }

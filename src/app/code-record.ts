@@ -3,7 +3,6 @@ export interface CodeRecord {
   title: string,
   language: string,
   preview_content: string,
-  author_name: string,
   tagItems: string[],
   filename: string
 }
