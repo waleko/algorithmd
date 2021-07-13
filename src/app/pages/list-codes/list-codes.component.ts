@@ -17,8 +17,9 @@ export class ListCodesComponent implements OnInit {
     this.items = afAuth.user.pipe(mergeMap(user => {
       // get current user uid
       let uid: string = user?.uid ?? "null"
+      console.log(uid)
       // load from db
-      return (<Observable<CodeRecord[]>>db.list(`users/${uid}/records`).valueChanges())
+      return (<Observable<CodeRecord[]>>db.list(`/users/${uid}/records`).valueChanges())
     }), map(e => {
       // transform tags
       return e.map(cr => [cr, cr.tagItems.map(tag => {
