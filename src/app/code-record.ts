@@ -3,7 +3,7 @@ export interface CodeRecord {
   title: string,
   language: string,
   preview_content: string,
-  tagItems: string[],
+  tagItems?: string[],
   filename: string
 }
 
@@ -18,4 +18,11 @@ export interface NewCodeRecord {
   tagItems: string[],
   filename: string,
   full_content: string
+}
+
+export interface TagView {
+  display: string,
+  value: string,
+  readonly: boolean,
+  removable: boolean
 }

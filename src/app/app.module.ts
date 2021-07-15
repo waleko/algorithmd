@@ -22,6 +22,7 @@ import {AngularFireAnalyticsModule} from "@angular/fire/analytics";
 import {ListCodesComponent} from './pages/list-codes/list-codes.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ViewCodeComponent} from './pages/view-code/view-code.component';
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import {ViewCodeComponent} from './pages/view-code/view-code.component';
     }),
 
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ],
   providers: [
     {

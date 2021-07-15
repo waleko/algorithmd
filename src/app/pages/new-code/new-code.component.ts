@@ -7,6 +7,7 @@ import {environment} from "../../../environments/environment";
 import {Router} from "@angular/router";
 import {AuthService} from "@auth0/auth0-angular";
 import {take} from "rxjs/operators";
+import {NgxSpinnerService} from "ngx-spinner";
 
 
 @Component({
@@ -26,12 +27,16 @@ export class NewCodeComponent implements OnInit {
     Validators.maxLength(100),
     Validators.pattern(/^[\w\-.\s]+$/)
   ])
-  codeEditorLanguage = ''
-  codeEditorContent = ''
+  codeEditorLanguage = "null"
+  codeEditorContent = ""
   submitted: boolean = false
 
-  constructor(private http: HttpClient, private router: Router, private auth: AuthService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private auth: AuthService,
+    private spinner: NgxSpinnerService
+  ) { }
 
   ngOnInit(): void {
     this.submitted = false
@@ -43,14 +48,8 @@ export class NewCodeComponent implements OnInit {
 
     // get MIME type for the filename
     const mime = getMimeByFilename(filename);
-    let res: string
-    if (!mime)
-      res = ""
-    else
-      res = mime[mime.length - 1]
-
     // pass mime to codemirror
-    this.codeEditorLanguage = res
+    this.codeEditorLanguage = mime.length ? mime[mime.length - 1] : "null"
   }
 
   async publish() {
@@ -73,9 +72,11 @@ export class NewCodeComponent implements OnInit {
         return
     }
 
+    // get form values
     const title = this.titleControl.value;
     const filename = this.filenameControl.value;
 
+    // prepare code record json body
     const newCodeRecord: NewCodeRecord = {
       title: title,
       filename: filename,
@@ -84,8 +85,38 @@ export class NewCodeComponent implements OnInit {
       full_content: this.codeEditorContent
     };
 
-    const {uid} = await this.http.post<{ uid: string }>(`${environment.apiUrl}/v1/upload`, newCodeRecord, {}).toPromise()
+    // start spinner in 500ms unless response has been already received by that point
+    let responseReceived = false
+    setTimeout(() => {
+      if (!responseReceived)
+        this.spinner.show()
+    }, 500)
 
+    // upload code record to API
+    const response = await this.http
+      .post<{ uid: string }>(`${environment.apiUrl}/v1/upload`, newCodeRecord, {})
+      .toPromise()
+      .catch( cause => {
+        // if request was unsuccessful log error
+        console.error(cause)
+      })
+      .finally(() => {
+        responseReceived = true
+        // hide spinner; is done in 50ms to prevent non-atomic behavior
+        setTimeout(() => {
+          this.spinner.hide()
+        }, 50)
+      })
+
+    // check if response is void (meaning an error was caught)
+    if (!(response instanceof Object))
+      return
+
+    // get uid
+    // @ts-ignore
+    const {uid} = response
+
+    // navigate to next page
     await this.router.navigate(["view", uid])
   }
 }
