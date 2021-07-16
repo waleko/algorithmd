@@ -73,4 +73,8 @@ export class AppComponent implements OnInit {
     );
 
   ngOnInit(): void {}
+
+  logout() {
+    this.auth.logout({ returnTo: window.location.origin })
+  }
 }
