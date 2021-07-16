@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "@auth0/auth0-angular";
 import {FirebaseService} from "./firebase.service";
-import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -24,9 +23,17 @@ export class AppComponent implements OnInit {
     })
 
     // sign in into firebase
-    auth.user$.pipe(take(1)).subscribe(user => {
-      if (user != null)
-        fs.signInViaAuth0()
+    auth.idTokenClaims$.subscribe(async idTokenClaims => {
+      // if no user is signed in, sign out
+      if (idTokenClaims == null) {
+        await fs.signOut()
+        return
+      }
+      // else, user is authenticated
+      // get auth0 uid
+      const uid = idTokenClaims?.sub
+      // sign in into firebase with auth0 uid
+      await fs.signInViaAuth0(uid)
     })
   }
 

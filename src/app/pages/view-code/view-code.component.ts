@@ -4,7 +4,8 @@ import {AngularFireAuth} from "@angular/fire/auth";
 import {map, mergeMap} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {FullCodeRecord, TagView} from "../../code-record";
+import {FullCodeRecord} from "../../code-record";
+import {TagView} from "../../tag-view";
 
 
 @Component({
@@ -20,7 +21,12 @@ export class ViewCodeComponent implements OnInit {
   // tags to be displayed
   tagItems: TagView[] = []
 
-  constructor(db: AngularFireDatabase, afAuth: AngularFireAuth, route: ActivatedRoute, router: Router) {
+  constructor(
+    db: AngularFireDatabase,
+    afAuth: AngularFireAuth,
+    route: ActivatedRoute,
+    router: Router
+  ) {
     // get code uid
     this.uid = route.params.pipe(map(p => p.uid))
 
@@ -29,14 +35,14 @@ export class ViewCodeComponent implements OnInit {
       (<Observable<FullCodeRecord>>db.object(`/records/${uid}`).valueChanges()))
     )
 
-    // if record is null cast navigate to 404
+    // if record is null (no such code record exists), navigate to 404
     this.fullCodeRecord = rawLoaded.pipe(mergeMap(async e => {
       if (e == null)
         await router.navigate(["404"], {skipLocationChange: true})
       return e
     }))
 
-    // transform tags
+    // transform tags to `TagView`
     this.fullCodeRecord.pipe(map(r => r.info.tagItems?.map(e => {
       return {display: e, value: e, readonly: true, removable: false}
     }) ?? [])).subscribe(val => this.tagItems = val)

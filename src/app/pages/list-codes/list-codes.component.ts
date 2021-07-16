@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {CodeRecord, TagView} from "../../code-record";
+import {CodeRecord} from "../../code-record";
 import {AngularFireDatabase} from "@angular/fire/database";
 import {AngularFireAuth} from "@angular/fire/auth";
 import {map, mergeMap} from "rxjs/operators";
+import {TagView} from "../../tag-view";
 
 @Component({
   selector: 'app-list-codes',

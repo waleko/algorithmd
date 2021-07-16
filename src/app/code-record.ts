@@ -20,9 +20,3 @@ export interface NewCodeRecord {
   full_content: string
 }
 
-export interface TagView {
-  display: string,
-  value: string,
-  readonly: boolean,
-  removable: boolean
-}
