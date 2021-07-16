@@ -1,3 +1,5 @@
+import { TagView } from "./tag-view";
+
 export interface CodeRecord {
   uid: string;
   title: string;
@@ -18,4 +20,9 @@ export interface NewCodeRecord {
   tagItems: string[];
   filename: string;
   full_content: string;
+}
+
+export interface CodeRecordView {
+  codeRecord: CodeRecord;
+  tagViews: TagView[];
 }

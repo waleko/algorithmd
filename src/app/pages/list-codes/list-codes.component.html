@@ -10,19 +10,19 @@
           <h4 class="card-title">
             <a
               class="text-body"
-              routerLink="/view/{{ item[0].uid }}"
+              routerLink="/view/{{ item.codeRecord.uid }}"
               style="font-size: 24px"
-              >{{ item[0].title }}</a
+              >{{ item.codeRecord.title }}</a
             >
           </h4>
           <tag-input
-            [(ngModel)]="item[1]"
+            [(ngModel)]="item.tagViews"
             [maxItems]="0"
             [ngModelOptions]="{ standalone: true }"
             id="codeTags"
             theme="bootstrap"
           ></tag-input>
-          <div *ngFor="let line of item[0].preview_content.split('\n')">
+          <div *ngFor="let line of item.codeRecord.preview_content.split('\n')">
             <p
               class="card-text"
               style="

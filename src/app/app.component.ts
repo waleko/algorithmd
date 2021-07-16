@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "@auth0/auth0-angular";
 import { FirebaseService } from "./firebase.service";
+import { Observable, OperatorFunction } from "rxjs";
+import { filter, map, mergeMap } from "rxjs/operators";
+import { CodeRecordView } from "./code-record";
+import { Ng2SearchPipe } from "ng2-search-filter";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -14,7 +19,11 @@ export class AppComponent implements OnInit {
   // Flag if user observable has been loaded
   isDataLoaded: boolean; // TODO: do this cleaner
 
-  constructor(public auth: AuthService, private fs: FirebaseService) {
+  constructor(
+    public auth: AuthService,
+    private fs: FirebaseService,
+    private router: Router
+  ) {
     this.isDataLoaded = false;
 
     // signal that the page has loaded
@@ -36,6 +45,32 @@ export class AppComponent implements OnInit {
       await fs.signInViaAuth0(uid);
     });
   }
+
+  codeRecordSearchFormatter = (crv: CodeRecordView) => crv.codeRecord.title;
+
+  codeRecordSearchSelect(crv: CodeRecordView): string {
+    this.router.navigate(["view", crv.codeRecord.uid]).then((_) => {
+      const el = <HTMLInputElement>document.getElementById("codeRecordSearch");
+      el.value = "";
+      el.blur();
+    });
+    return this.codeRecordSearchFormatter(crv);
+  }
+
+  codeRecordSearchFunction: OperatorFunction<
+    string,
+    readonly CodeRecordView[]
+  > = (text$: Observable<string>) =>
+    this.fs.codeRecordViews.pipe(
+      mergeMap((codeRecordViews) =>
+        text$.pipe(
+          map(
+            (text) =>
+              <CodeRecordView[]>Ng2SearchPipe.filter(codeRecordViews, text)
+          )
+        )
+      )
+    );
 
   ngOnInit(): void {}
 }

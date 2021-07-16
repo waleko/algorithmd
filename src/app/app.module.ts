@@ -23,6 +23,7 @@ import { ListCodesComponent } from "./pages/list-codes/list-codes.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { ViewCodeComponent } from "./pages/view-code/view-code.component";
 import { NgxSpinnerModule } from "ngx-spinner";
+import { Ng2SearchPipeModule } from "ng2-search-filter";
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     BrowserAnimationsModule,
     HttpClientModule,
     NgxSpinnerModule,
+    Ng2SearchPipeModule,
   ],
   providers: [
     {

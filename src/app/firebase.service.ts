@@ -2,13 +2,27 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { environment } from "../environments/environment";
-import { take } from "rxjs/operators";
+import { map, mergeMap, take } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { CodeRecord, CodeRecordView } from "./code-record";
+import { AngularFireDatabase } from "@angular/fire/database";
 
 @Injectable({
   providedIn: "root",
 })
 export class FirebaseService {
-  constructor(private http: HttpClient, private afAuth: AngularFireAuth) {}
+  /**
+   * Realtime code record view list for authenticated user (or else empty)
+   */
+  public codeRecordViews: Observable<CodeRecordView[]>;
+
+  constructor(
+    private http: HttpClient,
+    private afAuth: AngularFireAuth,
+    private db: AngularFireDatabase
+  ) {
+    this.codeRecordViews = this.getCodeRecordsViews();
+  }
 
   /**
    * Request custom firebase token from backend
@@ -33,12 +47,50 @@ export class FirebaseService {
     console.log(`Logged in as ${await this.getCurrentUID()}`);
   }
 
+  /**
+   * Sign out of firebase
+   */
   async signOut(): Promise<void> {
-    const currentUser = await this.afAuth.user.pipe(take(1)).toPromise();
-    if (currentUser != null) {
+    if ((await this.getCurrentUID()) != null) {
       await this.afAuth.signOut();
       console.log("Logged out!");
     }
+  }
+
+  /**
+   * Gets realtime code records of signed in user (or else empty)
+   *
+   * @private
+   */
+  private getCodeRecordsViews(): Observable<CodeRecordView[]> {
+    return this.afAuth.user.pipe(
+      mergeMap((user) => {
+        // get current user uid
+        let uid: string = user?.uid ?? "null";
+        if (uid == "null") return of([]);
+        // load from db
+        return <Observable<CodeRecord[]>>(
+          this.db.list(`/users/${uid}/records`).valueChanges()
+        );
+      }),
+      map((e) => {
+        // transform tags to tagviews
+        return e.map((cr) => {
+          return {
+            codeRecord: cr,
+            tagViews:
+              cr.tagItems?.map((tag) => {
+                return {
+                  display: tag,
+                  value: tag,
+                  readonly: true,
+                  removable: false,
+                };
+              }) ?? [],
+          };
+        });
+      })
+    );
   }
 
   /**

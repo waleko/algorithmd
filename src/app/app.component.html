@@ -13,8 +13,26 @@
       <div class="collapse navbar-collapse" id="navcol-1">
         <ul class="navbar-nav mr-auto">
           <li *ngIf="auth.user$ | async" class="nav-item">
+            <form class="form-inline">
+              <input
+                id="codeRecordSearch"
+                class="form-control"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+                [ngbTypeahead]="codeRecordSearchFunction"
+                [inputFormatter]="codeRecordSearchFormatter"
+                [resultFormatter]="codeRecordSearchFormatter"
+                (selectItem)="codeRecordSearchSelect($event.item)"
+                [editable]="false"
+                autocomplete="true"
+              />
+            </form>
+          </li>
+          <li *ngIf="auth.user$ | async" class="nav-item">
             <a class="nav-link" href="#" routerLink="/my">My saves</a>
           </li>
+
           <!--          <li class="nav-item"><a class="nav-link" routerLink="#">Second Item</a></li>-->
           <!--          <li class="nav-item dropdown"><a aria-expanded="false" class="dropdown-toggle nav-link"-->
           <!--                                           data-toggle="dropdown" href="#">Dropdown </a>-->
@@ -26,7 +44,7 @@
         <span class="navbar-text actions">
           <div *ngIf="auth.user$ | async; then loggedIn; else loggedOut"></div>
           <ng-template #loggedIn>
-            <div class="collapse navbar-collapse" id="navbar-list-4">
+            <div id="navbar-list-4">
               <ul *ngIf="auth.user$ | async as user" class="navbar-nav">
                 <li class="nav-item dropdown">
                   <a
