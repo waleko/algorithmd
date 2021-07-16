@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { map, mergeMap } from "rxjs/operators";
+import { map, mergeMap, take } from "rxjs/operators";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { FullCodeRecord } from "../../code-record";
 import { TagView } from "../../tag-view";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: "app-view-code",
@@ -62,4 +63,23 @@ export class ViewCodeComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  private async getFullContent(): Promise<string> {
+    return await this.fullCodeRecord
+      .pipe(
+        take(1),
+        map((fcr) => fcr.full_content)
+      )
+      .toPromise();
+  }
+
+  async copyCode() {
+    const content: string = await this.getFullContent();
+    await navigator.clipboard.writeText(content);
+  }
+
+  async downloadCode() {
+    const uid: string = await this.uid.pipe(take(1)).toPromise();
+    window.open(`${environment.apiUrl}/v1/download/${uid}`);
+  }
 }

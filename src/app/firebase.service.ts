@@ -89,7 +89,8 @@ export class FirebaseService {
               }) ?? [],
           };
         });
-      })
+      }),
+      map((arr) => arr.reverse())
     );
   }
 
