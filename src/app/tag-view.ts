@@ -1,6 +1,6 @@
 export interface TagView {
-  display: string,
-  value: string,
-  readonly: boolean,
-  removable: boolean
+  display: string;
+  value: string;
+  readonly: boolean;
+  removable: boolean;
 }
