@@ -6,6 +6,7 @@ import { map, mergeMap, take } from "rxjs/operators";
 import { Observable, of } from "rxjs";
 import { CodeRecord, CodeRecordView } from "./code-record";
 import { AngularFireDatabase } from "@angular/fire/database";
+import { UploadQuota } from "./upload-quota";
 
 @Injectable({
   providedIn: "root",
@@ -16,12 +17,15 @@ export class FirebaseService {
    */
   public codeRecordViews: Observable<CodeRecordView[]>;
 
+  public quota: Observable<UploadQuota | undefined | null>;
+
   constructor(
     private http: HttpClient,
     private afAuth: AngularFireAuth,
     private db: AngularFireDatabase
   ) {
     this.codeRecordViews = this.getCodeRecordsViews();
+    this.quota = this.getQuota();
   }
 
   /**
@@ -66,8 +70,8 @@ export class FirebaseService {
     return this.afAuth.user.pipe(
       mergeMap((user) => {
         // get current user uid
-        let uid: string = user?.uid ?? "null";
-        if (uid == "null") return of([]);
+        let uid = user?.uid;
+        if (uid == null) return of([]);
         // load from db
         return <Observable<CodeRecord[]>>(
           this.db.list(`/users/${uid}/records`).valueChanges()
@@ -91,6 +95,34 @@ export class FirebaseService {
         });
       }),
       map((arr) => arr.reverse())
+    );
+  }
+
+  /**
+   * Gets realtime quota for current firebase user
+   * @private
+   */
+  private getQuota(): Observable<UploadQuota | undefined | null> {
+    return this.afAuth.user.pipe(
+      mergeMap((user) => {
+        // get user uid
+        let uid = user?.uid;
+        // if not authenticated return null
+        if (uid == null) return of(null);
+        // try to get custom quota
+        return (<Observable<UploadQuota | undefined | null>>(
+          this.db.object(`/limits/customQuotas/${uid}`).valueChanges()
+        )).pipe(
+          mergeMap((customQuota) => {
+            if (customQuota == null)
+              // if no custom quota is present, return default quota
+              return <Observable<UploadQuota>>(
+                this.db.object(`/limits/defaultLimit`).valueChanges()
+              );
+            else return of(customQuota);
+          })
+        );
+      })
     );
   }
 
