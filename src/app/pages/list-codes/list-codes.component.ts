@@ -6,7 +6,6 @@ import { FirebaseService } from "../../firebase.service";
 @Component({
   selector: "app-list-codes",
   templateUrl: "./list-codes.component.html",
-  styleUrls: ["./list-codes.component.scss"],
 })
 export class ListCodesComponent implements OnInit {
   items: Observable<CodeRecordView[]>;

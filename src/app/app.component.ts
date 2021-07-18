@@ -12,9 +12,9 @@ import { Router } from "@angular/router";
   templateUrl: "app.component.html",
 })
 export class AppComponent implements OnInit {
-  title = "algorithmd";
+  title: string = "algorithmd";
 
-  year = new Date().getFullYear();
+  year: number = new Date().getFullYear();
 
   // Flag if user observable has been loaded
   isDataLoaded: boolean; // TODO: do this cleaner

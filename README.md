@@ -26,7 +26,7 @@
 
 <br />
 
-## What is AlgorithmD?
+## What is AlgorithmD
 
 AlgorithmD is a website built to share snippets of code.
 
@@ -34,7 +34,7 @@ It is named after "Algorithm D" by Donald Knuth, that implements division of non
 
 You can see the [source code](https://algorithmd.wlko.me/view/fb792837-c2db-4f80-a002-d0b4801991df) of Algorithm D in AlgorithmD!
 
-## What are the goals of this project?
+## Goals of this project
 The main goal of this project is educational, as countless other alternatives exist ([gist](https://gist.github.com), [pastebin](https://pastebin.com) and many others). While creating this website I got to familiarize myself with such technologies as Angular, Ktor, Google App Engine, Firebase Realtime Database, Auth0 and much more.
 
 ## Contacts
