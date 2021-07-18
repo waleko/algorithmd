@@ -1,14 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~codemirror/lib/codemirror";
 @import "~codemirror/theme/material";
-
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
-
+/* Bootstrap additional assets */
 @import "assets/css/Navigation-with-Button.css";
 @import "assets/css/Navigation-Clean.css";
 @import "assets/css/Footer-Basic.css";
-
+/* Fonts & misc */
 @import "https://fonts.googleapis.com/css?family=JetBrains+Mono";
 @import "https://fonts.googleapis.com/css?family=Montserrat";
 @import "assets/fonts/fontawesome-all.min.css";
@@ -17,6 +16,9 @@
 
 body {
   background: #f4f4f4;
+
+  /* Margin bottom by footer height */
+  margin-bottom: 250px;
 }
 
 .footer-basic a {
@@ -30,11 +32,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 250px;
-}
-
 .my-footer {
   position: absolute;
   bottom: 0;
@@ -44,7 +41,6 @@ body {
 }
 
 .unselectable {
-  user-drag: none;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-drag: none;

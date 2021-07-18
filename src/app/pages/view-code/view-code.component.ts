@@ -11,7 +11,6 @@ import { environment } from "../../../environments/environment";
 @Component({
   selector: "app-view-code",
   templateUrl: "./view-code.component.html",
-  styleUrls: ["./view-code.component.scss"],
 })
 export class ViewCodeComponent implements OnInit {
   // code uid
