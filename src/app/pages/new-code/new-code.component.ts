@@ -113,9 +113,8 @@ export class NewCodeComponent implements OnInit {
               await this.auth
                 .loginWithPopup()
                 .toPromise()
-                .catch((error) => {
-                  console.error(error);
-                });
+                .catch((_) => {}); // e.g. user has closed the popup
+
               // check if user has completed authorizing
               const isNewlyAuthenticated = await this.auth.isAuthenticated$
                 .pipe(take(1))
@@ -150,7 +149,6 @@ export class NewCodeComponent implements OnInit {
         return false;
       // check if amount of code records is not exceeded
       if (quota.cur_amount >= quota.max_amount) {
-        console.log("Quota exceeded");
         this.openModal(
           `Cannot upload new codes. Your code quota of ${quota.max_amount} has been reached. Contact administrator to increase your quota.`
         );

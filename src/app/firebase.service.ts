@@ -40,7 +40,6 @@ export class FirebaseService {
 
     // if already logged in as that user
     if (auth0UID == currentUserUID) {
-      console.log(`Logging in skipped for ${auth0UID}`);
       return;
     }
 
@@ -48,7 +47,6 @@ export class FirebaseService {
       .post<{ token: string }>(`${environment.apiUrl}/v1/convertToken`, {}, {})
       .toPromise();
     await this.afAuth.signInWithCustomToken(token);
-    console.log(`Logged in as ${await this.getCurrentUID()}`);
   }
 
   /**
@@ -57,7 +55,6 @@ export class FirebaseService {
   async signOut(): Promise<void> {
     if ((await this.getCurrentUID()) != null) {
       await this.afAuth.signOut();
-      console.log("Logged out!");
     }
   }
 
