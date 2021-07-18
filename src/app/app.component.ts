@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AuthService } from "@auth0/auth0-angular";
 import { FirebaseService } from "./firebase.service";
 import { Observable, OperatorFunction } from "rxjs";
-import { filter, map, mergeMap } from "rxjs/operators";
+import { map, mergeMap } from "rxjs/operators";
 import { CodeRecordView } from "./code-record";
 import { Ng2SearchPipe } from "ng2-search-filter";
 import { Router } from "@angular/router";
@@ -32,15 +32,15 @@ export class AppComponent implements OnInit {
     });
 
     // sign in into firebase
-    auth.idTokenClaims$.subscribe(async (idTokenClaims) => {
+    auth.user$.subscribe(async (user) => {
       // if no user is signed in, sign out
-      if (idTokenClaims == null) {
+      if (user == null) {
         await fs.signOut();
         return;
       }
       // else, user is authenticated
       // get auth0 uid
-      const uid = idTokenClaims?.sub;
+      const uid = user?.sub;
       // sign in into firebase with auth0 uid
       await fs.signInViaAuth0(uid);
     });
@@ -74,7 +74,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  logout() {
-    this.auth.logout({ returnTo: window.location.origin })
+  async logout() {
+    await this.fs.signOut();
+    this.auth.logout({ returnTo: window.location.origin });
   }
 }

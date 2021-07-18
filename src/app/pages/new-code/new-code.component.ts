@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { getMimeByFilename } from "../../registered-languages";
 import { NewCodeRecord } from "../../code-record";
@@ -6,8 +6,12 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
 import { Router } from "@angular/router";
 import { AuthService } from "@auth0/auth0-angular";
-import { take } from "rxjs/operators";
+import { map, mergeMap, take } from "rxjs/operators";
 import { NgxSpinnerService } from "ngx-spinner";
+import { FirebaseService } from "../../firebase.service";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Observable } from "rxjs";
+import { UploadQuota } from "../../upload-quota";
 
 @Component({
   selector: "app-new-code",
@@ -29,12 +33,23 @@ export class NewCodeComponent implements OnInit {
   codeEditorContent = "";
   submitted: boolean = false;
 
+  maxCodeLengthByQuota: Observable<number>;
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private auth: AuthService,
-    private spinner: NgxSpinnerService
-  ) {}
+    private spinner: NgxSpinnerService,
+    public fs: FirebaseService,
+    private modalService: NgbModal
+  ) {
+    this.maxCodeLengthByQuota = fs.quota.pipe(
+      map((quota) => {
+        if (quota == null) return 1e6;
+        else return (quota.max_upload_size_KB * 1024) / 2;
+      })
+    );
+  }
 
   ngOnInit(): void {
     this.submitted = false;
@@ -50,32 +65,109 @@ export class NewCodeComponent implements OnInit {
     this.codeEditorLanguage = mime.length ? mime[mime.length - 1] : "null";
   }
 
-  async publish() {
-    this.submitted = true;
+  // Modal things
+  @ViewChild("modalContent")
+  private modalContent!: TemplateRef<any>;
+  errorText: string = "Something went wrong. Please try again.";
 
+  /**
+   * Opens simple templated modal with given text
+   * @param text Text to be displayed
+   * @private
+   */
+  private openModal(text: string) {
+    this.errorText = text;
+    this.modalService.open(this.modalContent, {
+      centered: true,
+      animation: true,
+    });
+  }
+
+  /**
+   * Validates user input for new code record creation. Performs simple checks and checks against quota.
+   * @return `True` if input is valid and can be sent to API; otherwise `False`
+   * @private
+   */
+  private async validateUserInput(): Promise<boolean> {
+    // Simple checks
     if (
       this.titleControl.invalid ||
       this.filenameControl.invalid ||
       this.codeEditorContent.length == 0
     )
-      return;
+      return false;
 
-    // check if user is authenticated
-    let isAuthenticated: boolean = await this.auth.isAuthenticated$
-      .pipe(take(1))
-      .toPromise();
+    // get quota (or null if user refused to authenticate)
+    const quota: UploadQuota | undefined | null =
+      await this.auth.isAuthenticated$
+        .pipe(
+          // take first from observable
+          take(1),
+          mergeMap(async (isAuthenticated) => {
+            // check auth0 auth status
+            if (isAuthenticated) {
+              // if user is authenticated, get current quota
+              return await this.fs.quota.pipe(take(1)).toPromise();
+            } else {
+              // if user is not authenticated, prompt him to sign in
+              await this.auth
+                .loginWithPopup()
+                .toPromise()
+                .catch((error) => {
+                  console.error(error);
+                });
+              // check if user has completed authorizing
+              const isNewlyAuthenticated = await this.auth.isAuthenticated$
+                .pipe(take(1))
+                .toPromise();
+              if (isNewlyAuthenticated) {
+                // if user is now authenticated get quota
 
-    // if not authenticated, prompt to sign in
-    if (!isAuthenticated) {
-      // popup login
-      await this.auth.loginWithPopup().toPromise();
-      // update user's auth status
-      isAuthenticated = await this.auth.isAuthenticated$
-        .pipe(take(1))
+                // show spinner as the process might take a couple of seconds
+                this.showSpinner();
+                // INFO: `take(2)` is here, as quota is `null` at first
+                // and only after successful token exchange it is properly initialized
+                return await this.fs.quota.pipe(take(2)).toPromise();
+              } else {
+                // if user has refused to authenticate, stop
+                return null;
+              }
+            }
+          })
+        )
         .toPromise();
-      // if user refused to sign in, stop
-      if (!isAuthenticated) return;
+
+    this.hideSpinner(); // TODO: avoid spinner reappearing on success
+
+    // if failed to load quota, stop
+    // it shall happen only when user has refused authenticating
+    if (quota == null) {
+      return false;
+    } else {
+      // check if code does not exceed maximum length
+      // INFO: `return false;` is here, as `text-danger` for this case is present in the html
+      if (this.codeEditorContent.length * 2 > quota.max_upload_size_KB * 1024)
+        return false;
+      // check if amount of code records is not exceeded
+      if (quota.cur_amount >= quota.max_amount) {
+        console.log("Quota exceeded");
+        this.openModal(
+          `Cannot upload new codes. Your code quota of ${quota.max_amount} has been reached. Contact administrator to increase your quota.`
+        );
+        return false;
+      }
     }
+    // validation was successful
+    return true;
+  }
+
+  async publish() {
+    // activate text-danger errors if any are present
+    this.submitted = true;
+
+    // validate user input
+    const isValid = await this.validateUserInput();
+    if (!isValid) return;
 
     // get form values
     const title = this.titleControl.value;
@@ -90,40 +182,46 @@ export class NewCodeComponent implements OnInit {
       full_content: this.codeEditorContent,
     };
 
-    // start spinner in 500ms unless response has been already received by that point
-    let responseReceived = false;
-    setTimeout(() => {
-      if (!responseReceived) this.spinner.show();
-    }, 500);
+    // upload the code record
+    await this.uploadCode(newCodeRecord);
+  }
 
-    // upload code record to API
-    const response = await this.http
+  private async uploadCode(newCodeRecord: NewCodeRecord) {
+    // show spinner, as API may require a cold start
+    this.showSpinner();
+
+    await this.http
       .post<{ uid: string }>(
         `${environment.apiUrl}/v1/upload`,
         newCodeRecord,
         {}
       )
       .toPromise()
-      .catch((cause) => {
-        // if request was unsuccessful log error
-        console.error(cause);
+      .then(async (response) => {
+        // get uid of the delivered code record
+        const { uid } = response;
+        // navigate to next page
+        await this.router.navigate(["view", uid]);
       })
       .finally(() => {
-        responseReceived = true;
-        // hide spinner; is done in 50ms to prevent non-atomic behavior
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 50);
+        this.hideSpinner();
       });
+  }
 
-    // check if response is void (meaning an error was caught)
-    if (!(response instanceof Object)) return;
+  loadingComplete: boolean = true;
+  private showSpinner() {
+    // start spinner in 500ms unless response has been already received by that point
+    this.loadingComplete = false;
+    setTimeout(() => {
+      if (!this.loadingComplete) this.spinner.show();
+    }, 500);
+  }
 
-    // get uid
-    // @ts-ignore
-    const { uid } = response;
-
-    // navigate to next page
-    await this.router.navigate(["view", uid]);
+  private hideSpinner() {
+    this.loadingComplete = true;
+    // hide spinner; is done in 50ms to prevent non-atomic behavior
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 50);
   }
 }

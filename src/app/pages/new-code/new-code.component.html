@@ -85,10 +85,25 @@
             }"
           ></ngx-codemirror>
           <div
-            *ngIf="submitted && codeEditorContent.length == 0"
+            *ngIf="
+              submitted &&
+              (codeEditorContent.length == 0 ||
+                codeEditorContent.length >
+                  ((maxCodeLengthByQuota | async) ?? 1e6))
+            "
             class="text-danger"
           >
-            <div>Code is required</div>
+            <div *ngIf="codeEditorContent.length == 0">Code is required</div>
+            <!-- TODO: fix this mess with 1e6 -->
+            <div
+              *ngIf="
+                codeEditorContent.length >
+                ((maxCodeLengthByQuota | async) ?? 1e6)
+              "
+            >
+              Code must contain less than
+              {{ maxCodeLengthByQuota | async }} characters
+            </div>
           </div>
         </div>
       </div>
@@ -106,3 +121,29 @@
     </div>
   </div>
 </div>
+
+<ng-template #modalContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Oops</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>{{ errorText }}</p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Save click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
