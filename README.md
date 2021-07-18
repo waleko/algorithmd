@@ -7,10 +7,6 @@
     <img alt="Uptime Robot ratio (7 days)"
       src="https://img.shields.io/uptimerobot/ratio/7/m788737561-c80334d2b48e2c36f88e92a4">
   </a>
-  <a
-      href="https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=waleko/algorithmd&amp;utm_campaign=Badge_Grade">
-      <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/2c7084e218d441cdb28f709e7bea5cda" />
-  </a>
   <a href= "https://github.com/prettier/prettier">
     <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg">
   </a>
