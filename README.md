@@ -32,6 +32,14 @@ It is named after Donald Knuth's "Algorithm D", that implements division of nonn
 
 You can see the [source code](https://algorithmd.wlko.me/view/fb792837-c2db-4f80-a002-d0b4801991df) of Algorithm D in AlgorithmD!
 
+## Features
+* Built-in code editor that supports all major languages
+* Drag-n-drop support
+* Snippet tags for grouping
+* Search of snippets by title, filename, tags, code or their parts
+* Publicly accessible URLs
+* Download and copy functionalities
+
 ## Goals of this project
 The main goal of this project is educational, as countless other alternatives exist ([gist](https://gist.github.com), [pastebin](https://pastebin.com) and many others). While creating this website I got to familiarize myself with such technologies as Angular, Ktor, Google App Engine, Firebase Realtime Database, Auth0 and much more.
 
