@@ -1,18 +1,20 @@
 <a href="https://algorithmd.wlko.me">
-  <img align="left" width="75px" src="https://algorithmd.wlko.me/assets/img/algorithmd.png">
+  <img align="left" height="80px" src="https://algorithmd.wlko.me/assets/img/algorithmd.png">
 </a>
-<h1 align="left">
+<h1 style="display: inline;">
   AlgorithmD
-  <a href="https://algorithmd.wlko.me">
-    <img alt="Uptime Robot ratio (7 days)"
-      src="https://img.shields.io/uptimerobot/ratio/7/m788737561-c80334d2b48e2c36f88e92a4">
-  </a>
-  <a href= "https://github.com/prettier/prettier">
-    <img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg">
-  </a>
-  <a href="./LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/waleko/algorithmd"></a>
 
 </h1>
+
+<p>Website for sharing code snippets</p>
+
+[![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m788737561-c80334d2b48e2c36f88e92a4?logo=cloudflare&style=flat-square)](https://algorithmd.wlko.me)
+[![GitHub top language](https://img.shields.io/github/languages/top/waleko/algorithmd?logo=github&style=flat-square)](https://github.com/waleko/algorithmd)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![license](https://img.shields.io/github/license/waleko/algorithmd?style=flat-square)](./LICENSE)
+
+<br />
+<br />
 
 <p align="center">
   <a href="https://algorithmd.wlko.me/view/fb792837-c2db-4f80-a002-d0b4801991df">
