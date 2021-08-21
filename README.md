@@ -28,9 +28,9 @@
 
 AlgorithmD is a website for sharing snippets of code.
 
-It is named after Donald Knuth's "Algorithm D", that implements division of nonnegative integers ([read more](https://skanthak.homepage.t-online.de/division.html)).
+It is named after Donald Knuth's "Algorithm D", that implements division of nonnegative integers ([learn more](https://skanthak.homepage.t-online.de/division.html)).
 
-You can see the [source code](https://algorithmd.wlko.me/view/fb792837-c2db-4f80-a002-d0b4801991df) of Algorithm D in AlgorithmD!
+You can even see an [implementation](https://algorithmd.wlko.me/view/fb792837-c2db-4f80-a002-d0b4801991df) of Algorithm D on AlgorithmD!
 
 ## Features
 * Built-in code editor that supports all major languages
