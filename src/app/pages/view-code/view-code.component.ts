@@ -53,7 +53,7 @@ export class ViewCodeComponent implements OnInit {
       .pipe(
         map(
           (r) =>
-            r.info.tagItems?.map((e) => {
+            r?.info?.tagItems?.map((e) => {
               return { display: e, value: e, readonly: true, removable: false };
             }) ?? []
         )
