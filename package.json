@@ -30,7 +30,7 @@
     "@ctrl/ngx-codemirror": "^5.0.0",
     "@ng-bootstrap/ng-bootstrap": "^9.1.1",
     "@sentry/angular": "^6.4.1",
-    "@sentry/tracing": "^6.4.1",
+    "@sentry/tracing": "^6.12.0",
     "bootstrap": "~4.6.0",
     "codemirror": "^5.61.1",
     "escape-string-regexp": "^5.0.0",
