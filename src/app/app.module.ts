@@ -48,8 +48,8 @@ import { Ng2SearchPipeModule } from "ng2-search-filter";
     AngularFireAnalyticsModule,
 
     AuthModule.forRoot({
-      domain: "algorithmd.eu.auth0.com",
-      clientId: "X3riHlRCmbZU1HV2splhBswCZvI6p2oN",
+      domain: "algorithmd-p1.eu.auth0.com",
+      clientId: "Wa4HW0vLbAIffwirtPXGSrGzPqIzs0TE",
       useRefreshTokens: true,
       cacheLocation: "localstorage",
       audience: "https://api.algorithmd.wlko.me",
