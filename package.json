@@ -34,7 +34,7 @@
     "bootstrap": "~4.6.0",
     "codemirror": "^5.61.1",
     "escape-string-regexp": "^5.0.0",
-    "firebase": "~8.10.0",
+    "firebase": "~10.2.0",
     "jquery": "^3.6.0",
     "ng-tags-input": "^3.2.0",
     "ng2-search-filter": "^0.5.1",
